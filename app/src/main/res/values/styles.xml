@@ -1,0 +1,43 @@
+<resources xmlns:app="http://schemas.android.com/apk/res-auto">
+    <style name="MainScreenButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">@dimen/heightForWeight</item>
+        <item name="android:backgroundTint">@color/YP_White</item>
+        <item name="android:textColor">@color/YP_Black</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textSize">@dimen/textSize22</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:outlineSpotShadowColor">#00000000</item>
+    </style>
+    <style name="TextSettings">
+        <item name="android:paddingVertical">@dimen/paddingForText</item>
+        <item name="android:layout_width">@dimen/heightForWeight</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/YP_Black</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/textSize16</item>
+    </style>
+    <style name="IconsSettings">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:backgroundTint">?attr/colorPrimaryVariant</item>
+
+    </style>
+    <style name="styleForText">
+        <item name="android:backgroundTint">@color/YP_White</item>
+        <item name="android:textColor">@color/YP_Black</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textSize">@dimen/textSize22</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
+    <style name="ButtonOnMenuOfSearch">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">56dp</item>
+    </style>
+</resources>

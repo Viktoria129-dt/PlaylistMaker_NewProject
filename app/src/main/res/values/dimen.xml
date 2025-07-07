@@ -8,5 +8,8 @@
     <dimen name="textSize22">22sp</dimen>
     <dimen name="ButtonBackSize">48dp</dimen>
     <dimen name="frame16">16dp</dimen>
+    <dimen name="minus16Pad">-16dp</dimen>
+    <dimen name="minus8Mar">-8dp</dimen>
+    <dimen name="m8MarPadd">8dp</dimen>
 
 </resources>
