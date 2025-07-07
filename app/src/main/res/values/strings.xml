@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">PlaylistMaker_NewProject</string>
+    <string name="app_name">PlaylistMaker_App</string>
+    <string name="playlist_maker">Playlist Maker</string>
 </resources>
