@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="radiusButton">16dp</dimen>
+    <dimen name="padIcon">8dp</dimen>
+    <dimen name="heightForWeight">0dp</dimen>
+    <dimen name="textSize16">16sp</dimen>
+    <dimen name="paddingForText">21dp</dimen>
+    <dimen name="textSize22">22sp</dimen>
+    <dimen name="ButtonBackSize">48dp</dimen>
+    <dimen name="frame16">16dp</dimen>
+
+</resources>
