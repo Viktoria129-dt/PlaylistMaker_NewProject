@@ -1,5 +1,5 @@
 <resources xmlns:app="http://schemas.android.com/apk/res-auto">
-    <style name="MainScreenButton">
+    <style name="MainScreenButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">@dimen/heightForWeight</item>
@@ -25,7 +25,6 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:backgroundTint">?attr/colorPrimaryVariant</item>
-
     </style>
     <style name="styleForText">
         <item name="android:backgroundTint">@color/YP_White</item>

@@ -23,7 +23,7 @@
         app:navigationIcon="@drawable/back"
         app:contentInsetStartWithNavigation="12dp">
     </com.google.android.material.appbar.MaterialToolbar>
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/frame16">
@@ -49,13 +49,12 @@
             android:id="@+id/clearIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
+            android:layout_gravity="end|center_vertical"
             android:src="@drawable/clear"
             android:visibility="gone">
         </ImageView>
 
-    </RelativeLayout>
+    </FrameLayout>
 
     <ScrollView
         android:layout_width="match_parent"

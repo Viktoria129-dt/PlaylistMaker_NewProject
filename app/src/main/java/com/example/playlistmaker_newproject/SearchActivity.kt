@@ -8,17 +8,22 @@ import androidx.core.view.WindowInsetsCompat
 
 class SearchActivity : AppCompatActivity() {
     private var savedText:String=""
-    private lateinit var editText: android.widget.EditText
+    private lateinit var searchLine: android.widget.EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_search)
+
+        if (savedInstanceState != null) {
+            savedText = savedInstanceState.getString("SAVED_TEXT") ?: ""
+        }
+
         val buttonBack = findViewById<com.google.android.material.appbar.MaterialToolbar>(com.example.playlistmaker_newproject.R.id.bttnBack)
         buttonBack.setOnClickListener{
             finish()
         }
 
-        val searchLine = findViewById<android.widget.EditText>(com.example.playlistmaker_newproject.R.id.searchLine)
+        searchLine = findViewById<android.widget.EditText>(com.example.playlistmaker_newproject.R.id.searchLine)
         val clearButton = findViewById<android.widget.ImageView>(com.example.playlistmaker_newproject.R.id.clearIcon)
         clearButton.setOnClickListener{
             searchLine.text.clear()
@@ -62,7 +67,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: android.os.Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val restoredText = savedInstanceState.getString("SAVED TEXT")
-        editText.setText(restoredText)
+        searchLine.setText(restoredText)
     }
 
 }

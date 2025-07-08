@@ -19,7 +19,7 @@ class SettingActivity : androidx.appcompat.app.AppCompatActivity() {
         sharebutton.setOnClickListener{
             val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
-            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,"Скачайте это крутое приложение: 'https://practicum.yandex.ru/android-developer/'")
+            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.letsLaunchApp))
             startActivity(shareIntent)
         }
 
@@ -31,15 +31,15 @@ class SettingActivity : androidx.appcompat.app.AppCompatActivity() {
                 android.content.Intent.EXTRA_EMAIL,
                 arrayOf("Vikkipinya@gmail.com")
             )
-            supportIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Сообщение разработчикам и разработчицам приложения Playlist Maker")
-            supportIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Спасибо разработчикам и разработчицам за крутое приложение!")
+            supportIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.MessagetoDevelopers))
+            supportIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.ThanksDevelopers))
             startActivity(supportIntent)
         }
 
         val buttonRight = findViewById<android.widget.ImageButton>(com.example.playlistmaker_newproject.R.id.buttonRight)
         buttonRight.setOnClickListener{
             val rightIntent = android.content.Intent(android.content.Intent.ACTION_VIEW)
-            rightIntent.data = android.net.Uri.parse("https://yandex.ru/legal/practicum_offer/")
+            rightIntent.data = android.net.Uri.parse(getString(R.string.linkAndroidDeveloper))
             startActivity(rightIntent)
         }
     }
