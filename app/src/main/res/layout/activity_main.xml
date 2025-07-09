@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:padding="@dimen/frame16"
-    android:background="@color/YP_Blue"
+    android:background="?attr/colorPrimary"
     android:orientation="vertical">
 
     <TextView
@@ -12,6 +12,7 @@
         android:text="@string/playlist_maker"
         android:textSize="@dimen/textSize22"
         android:textFontWeight="500"
+        android:fontFamily="@font/ys_display_medium"
         android:textColor="@color/YP_White"
         android:layout_marginVertical="12dp"
         android:textStyle="bold"
@@ -19,17 +20,9 @@
     </TextView>
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="@dimen/heightForWeight"
-        android:backgroundTint="@color/YP_White"
-        android:textColor="@color/YP_Black"
-        android:textFontWeight="500"
-        android:textSize="@dimen/textSize22"
-        android:textAllCaps="false"
-        android:gravity="center"
+        style="@style/MainScreenButton"
         android:id="@+id/firstButton"
-        android:text="Поиск"
+        android:text="@string/Search"
         app:cornerRadius="@dimen/radiusButton"
         app:icon="@drawable/search"
         app:iconGravity="textStart"
@@ -38,17 +31,9 @@
     </Button>
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="@dimen/heightForWeight"
-        android:backgroundTint="@color/YP_White"
-        android:textColor="@color/YP_Black"
-        android:textFontWeight="500"
-        android:textSize="@dimen/textSize22"
-        android:textAllCaps="false"
-        android:gravity="center"
+        style="@style/MainScreenButton"
         android:id="@+id/secondButton"
-        android:text="Медиатека"
+        android:text="@string/Media"
         app:cornerRadius="@dimen/radiusButton"
         app:icon="@drawable/media"
         app:iconGravity="textStart"
@@ -57,17 +42,9 @@
     </Button>
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="@dimen/heightForWeight"
-        android:backgroundTint="@color/YP_White"
-        android:textColor="@color/YP_Black"
-        android:textFontWeight="500"
-        android:textSize="@dimen/textSize22"
-        android:textAllCaps="false"
-        android:gravity="center"
+        style="@style/MainScreenButton"
         android:id="@+id/thirdButton"
-        android:text="Настройки"
+        android:text="@string/Settings"
         android:layout_marginBottom="28dp"
         app:cornerRadius="@dimen/radiusButton"
         app:icon="@drawable/settings"

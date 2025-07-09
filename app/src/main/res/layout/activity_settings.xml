@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="@color/YP_White"
+    android:backgroundTint="?attr/colorSecondary"
     android:orientation="vertical">
 
     <LinearLayout
@@ -18,18 +18,18 @@
             android:layout_width="@dimen/ButtonBackSize"
             android:layout_height="@dimen/ButtonBackSize"
             android:src="@drawable/back"
-            app:tint="@color/YP_Black"
+            app:tint="?attr/colorSecondary"
             android:background="?attr/selectableItemBackgroundBorderless"
             app:iconGravity="textStart"
-            android:backgroundTint="?attr/colorOnSecondary">
+            android:backgroundTint="?attr/colorOnPrimary">
         </ImageButton>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/textSize22"
             android:paddingStart="12dp"
-            android:textColor="@color/YP_Black"
-            android:text="Настройки">
+            android:textColor="?attr/colorSecondary"
+            android:text="@string/Settings">
         </TextView>
     </LinearLayout>
 
@@ -44,9 +44,9 @@
             android:layout_width="@dimen/heightForWeight"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:textColor="@color/YP_Black"
+            android:textColor="?attr/colorSecondary"
             android:textSize="@dimen/textSize16"
-            android:text="Темная тема">
+            android:text="@string/Darktheme">
         </TextView>
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:layout_width="wrap_content"
@@ -69,16 +69,15 @@
             android:layout_width="@dimen/heightForWeight"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:textColor="@color/YP_Black"
+            android:textColor="?attr/colorSecondary"
             android:textSize="@dimen/textSize16"
-            android:text="Поделиться приложением">
+            android:text="@string/shareApp">
         </TextView>
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/YP_White"
+            style="@style/IconsSettings"
             android:id="@+id/shareButton"
-            android:src="@drawable/share">
+            android:src="@drawable/share"
+            app:tint="?attr/iconDarkThemeSettings">
         </ImageButton>
     </LinearLayout>
 
@@ -94,16 +93,15 @@
             android:layout_width="@dimen/heightForWeight"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:textColor="@color/YP_Black"
+            android:textColor="?attr/colorSecondary"
             android:textSize="@dimen/textSize16"
-            android:text="Написать в поддержку">
+            android:text="@string/support">
         </TextView>
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/YP_White"
+            style="@style/IconsSettings"
             android:id="@+id/supportButton"
-            android:src="@drawable/support">
+            android:src="@drawable/support"
+            app:tint="?attr/iconDarkThemeSettings">
         </ImageButton>
     </LinearLayout>
 
@@ -119,16 +117,15 @@
             android:layout_width="@dimen/heightForWeight"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:textColor="@color/YP_Black"
+            android:textColor="?attr/colorSecondary"
             android:textSize="@dimen/textSize16"
-            android:text="Пользовательское соглашение">
+            android:text="@string/user_agreement">
         </TextView>
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/YP_White"
+            style="@style/IconsSettings"
             android:id="@+id/buttonRight"
-            android:src="@drawable/right">
+            android:src="@drawable/right"
+            app:tint="?attr/iconDarkThemeSettings">
         </ImageButton>
     </LinearLayout>
 </LinearLayout>
