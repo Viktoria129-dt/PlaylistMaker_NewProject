@@ -1,10 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity">
+    android:paddingStart="@dimen/frame16"
+    android:paddingEnd="@dimen/frame16"
+    android:clipToPadding="false"
+    android:clipChildren="false"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/bttnBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/minus16Pad"
+        android:layout_marginStart="@dimen/minus16Pad"
+        style="@style/styleForText"
+        app:title="@string/Search"
+        app:navigationIconTint="?attr/colorSecondary"
+        android:layout_marginBottom="@dimen/frame16"
+        app:navigationIcon="@drawable/back"
+        app:contentInsetStartWithNavigation="12dp">
+    </com.google.android.material.appbar.MaterialToolbar>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/frame16">
+        <EditText
+            android:id="@+id/searchLine"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:hint="@string/Search"
+            android:gravity="center_vertical"
+            android:textColorHint="?attr/searchEditTextColor"
+            android:paddingStart="12dp"
+            android:drawablePadding="@dimen/m8MarPadd"
+            android:drawableStart="@drawable/searchline_icon"
+            android:inputType="text"
+            android:lines="1"
+            android:textCursorDrawable="@color/YP_Blue"
+            android:background="@drawable/bg_edit_text"
+            tools:ignore="RtlSymmetry"
+            app:drawableTint="?attr/searchEditTextColor">
+        </EditText>
+
+        <ImageView
+            android:id="@+id/clearIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:src="@drawable/clear"
+            android:visibility="gone">
+        </ImageView>
+
+    </FrameLayout>
+</LinearLayout>
