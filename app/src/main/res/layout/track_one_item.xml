@@ -71,6 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/right"
+        android:background="@android:color/transparent"
         android:backgroundTint="?attr/colorPrimaryVariant"
         app:tint="?attr/iconDarkThemeSettings">
     </ImageButton>

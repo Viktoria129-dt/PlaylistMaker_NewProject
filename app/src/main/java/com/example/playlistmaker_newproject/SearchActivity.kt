@@ -26,7 +26,6 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_search)
-
         if (savedInstanceState != null) {
             savedText = savedInstanceState.getString("SAVED_TEXT") ?: ""
         }
