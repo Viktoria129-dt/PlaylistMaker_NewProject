@@ -35,8 +35,10 @@ android {
     }
 }
 
-dependencies {
 
+dependencies {
+    implementation(libs.androidx.glide)
+    annotationProcessor (libs.androidx.glide.compiler)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
