@@ -98,13 +98,14 @@ class SearchActivity : AppCompatActivity() {
 
 }
 
-data class Track(
-    val trackName:String,
-    val artistName:String,
-    val trackTime:String,
-    val artworkUrl100:String
-)
 
+
+fun dpToPx(dp: Float, context: Context): Int {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        dp,
+        context.resources.displayMetrics).toInt()
+}
 
 class TrackHolder(itemView:View): RecyclerView.ViewHolder(itemView){
 
@@ -112,6 +113,7 @@ class TrackHolder(itemView:View): RecyclerView.ViewHolder(itemView){
     private val artistName: TextView = itemView.findViewById(R.id.bandName)
     private val trackTime: TextView = itemView.findViewById(R.id.timeSong)
     private val artworkUrl100: ImageView = itemView.findViewById(R.id.facebookImage)
+
 
 
     fun bind(item: Track){
@@ -123,24 +125,9 @@ class TrackHolder(itemView:View): RecyclerView.ViewHolder(itemView){
             .placeholder(R.drawable.placeholder)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .onlyRetrieveFromCache(false)
-            .transform(RoundedCorners(10))
+            .transform(RoundedCorners(dpToPx(2f, itemView.context)))
             .into(artworkUrl100)
     }
 
 }
 
-class TrackAdapter(
-    private val data: List<Track>): RecyclerView.Adapter<TrackHolder>(){
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.track_one_item,parent,false)
-        return TrackHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: TrackHolder, position: Int) {
-        holder.bind(data[position])
-    }
-    override fun getItemCount(): Int {
-        return data.size
-    }
-}
