@@ -42,7 +42,9 @@
             android:textCursorDrawable="@color/YP_Blue"
             android:background="@drawable/bg_edit_text"
             tools:ignore="RtlSymmetry"
-            app:drawableTint="?attr/searchEditTextColor">
+            app:drawableTint="?attr/searchEditTextColor"
+            android:imeOptions="actionDone"
+            android:singleLine="true">
         </EditText>
 
         <ImageView
@@ -62,4 +64,6 @@
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
     </androidx.recyclerview.widget.RecyclerView>
+
+
 </LinearLayout>

@@ -13,9 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PlaylistMaker_App"
         tools:targetApi="31">
+
         <activity
             android:name=".SearchActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity
             android:name=".MediatekaActivity"
             android:exported="false" />

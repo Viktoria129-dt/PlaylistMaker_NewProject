@@ -1,31 +1,46 @@
 package com.example.playlistmaker_newproject
 
+import android.R.attr.level
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
-import android.view.LayoutInflater
-import android.view.RoundedCorner
 import android.view.View
-import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import okhttp3.OkHttpClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import okhttp3.logging.HttpLoggingInterceptor
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
+
 
 class SearchActivity : AppCompatActivity() {
     private var savedText:String=""
+
     private lateinit var searchLine: android.widget.EditText
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_search)
+        searchLine = findViewById<android.widget.EditText>(com.example.playlistmaker_newproject.R.id.searchLine)
         if (savedInstanceState != null) {
             savedText = savedInstanceState.getString("SAVED_TEXT") ?: ""
         }
@@ -35,7 +50,12 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
-        searchLine = findViewById<android.widget.EditText>(com.example.playlistmaker_newproject.R.id.searchLine)
+
+        val errorState = findViewById<LinearLayout>(R.id.errorPlaceholder)
+        val emptyState = findViewById<LinearLayout>(R.id.stateEmpty)
+        val recyclerView = findViewById<RecyclerView>(R.id.track)
+        val tracks = ArrayList<Track>()
+
         val clearButton = findViewById<android.widget.ImageView>(com.example.playlistmaker_newproject.R.id.clearIcon)
         clearButton.setOnClickListener{
             searchLine.text.clear()
@@ -71,63 +91,114 @@ class SearchActivity : AppCompatActivity() {
         }
         searchLine.addTextChangedListener(textWatcher2)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.track)
+        val trackAdapter: TrackAdapter = TrackAdapter(tracks)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        val trackAdapter = TrackAdapter(
-            listOf(
-                Track("Smells Like Teen Spirit","Nirvana","5:01","https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"),
-                Track("Billie Jean", "Michael Jackson", "4:35", "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"),
-                Track("Stayin' Alive","Bee Gees","4:10","https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"),
-                Track("Whole Lotta Love","Led Zeppelin","5:33","https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"),
-                Track("Sweet Child O'Mine","Guns N' Roses","5:03","https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg")
-
-            )
-        )
         recyclerView.adapter = trackAdapter
+
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .build()
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://itunes.apple.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .build()
+
+        fun showEmptyState() {
+            recyclerView.visibility = View.GONE
+            errorState.visibility = View.GONE
+            emptyState.visibility = View.VISIBLE
+        }
+        val apiClient = retrofit.create(APIService::class.java)
+
+        fun performSearch(query: String) {
+            if (query.trim().isEmpty()) {
+                showEmptyState()
+                return
+            }
+
+            Log.d("SEARCH", "Performing search for: $query")
+
+            // Показываем индикатор загрузки
+            recyclerView.visibility = View.GONE
+            errorState.visibility = View.GONE
+            emptyState.visibility = View.GONE
+            // progressBar.visibility = View.VISIBLE  // добавьте ProgressBar в layout
+
+            apiClient.search(query).enqueue(object : Callback<ResultsTracks> {
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onResponse(
+                    call: Call<ResultsTracks>,
+                    response: Response<ResultsTracks>
+                ) {
+
+
+                    if (response.isSuccessful) {
+                        response.body()?.let { results ->
+                            if (results.results.isNotEmpty()) {
+                                tracks.clear()
+                                tracks.addAll(results.results)
+                                trackAdapter.notifyDataSetChanged()
+                                recyclerView.visibility = View.VISIBLE
+                                errorState.visibility = View.GONE
+                                emptyState.visibility = View.GONE
+                            } else {
+                                showEmptyState()
+                            }
+                        } ?: showEmptyState()
+                    } else {
+                        recyclerView.visibility = View.GONE
+                        errorState.visibility = View.VISIBLE
+                        emptyState.visibility = View.GONE
+                    }
+                }
+
+                override fun onFailure(call: Call<ResultsTracks>, t: Throwable) {
+                    recyclerView.visibility = View.GONE
+                    errorState.visibility = View.VISIBLE
+                    emptyState.visibility = View.GONE
+                    Log.e("SEARCH", "Search failed", t)
+                }
+            })
+        }
+
+
+        searchLine.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(searchLine.windowToken, 0)
+                performSearch(searchLine.text.toString())
+                true
+            }
+            else{
+                false
+            }
+
+        }
+
     }
+
+
     override fun onSaveInstanceState(outState: android.os.Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("SAVED TEXT", savedText)
+        outState.putString("SAVED_TEXT", savedText)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: android.os.Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        val restoredText = savedInstanceState.getString("SAVED TEXT")
+        val restoredText = savedInstanceState.getString("SAVED_TEXT")
         searchLine.setText(restoredText)
     }
-
 }
 
 
 
-fun dpToPx(dp: Float, context: Context): Int {
-    return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        dp,
-        context.resources.displayMetrics).toInt()
-}
-
-class TrackHolder(itemView:View): RecyclerView.ViewHolder(itemView){
-
-    private val trackName: TextView = itemView.findViewById(R.id.songTitle)
-    private val artistName: TextView = itemView.findViewById(R.id.bandName)
-    private val trackTime: TextView = itemView.findViewById(R.id.timeSong)
-    private val artworkUrl100: ImageView = itemView.findViewById(R.id.facebookImage)
 
 
 
-    fun bind(item: Track){
-        trackName.text = item.trackName
-        artistName.text = item.artistName
-        trackTime.text = item.trackTime
-        Glide.with(itemView.context)
-            .load(item.artworkUrl100)
-            .placeholder(R.drawable.placeholder)
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .onlyRetrieveFromCache(false)
-            .transform(RoundedCorners(dpToPx(2f, itemView.context)))
-            .into(artworkUrl100)
-    }
 
-}
+
+
 

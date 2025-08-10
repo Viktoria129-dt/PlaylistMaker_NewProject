@@ -10,6 +10,8 @@ activity = "1.10.1"
 constraintlayout = "2.2.1"
 material = "1.6.1"
 glide = "4.14.2"
+retrofitV = "2.9.0"
+okhttp = "4.9.3"
 
 [libraries]
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
@@ -22,7 +24,10 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
-
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofitV"}
+retrofit-gson = {group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofitV"}
+okhttp = {group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp"}
+okhttplog = {group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp"}
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
