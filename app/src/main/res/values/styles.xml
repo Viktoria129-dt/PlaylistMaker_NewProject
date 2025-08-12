@@ -25,6 +25,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:backgroundTint">?attr/colorPrimaryVariant</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
     <style name="styleForText">
         <item name="android:backgroundTint">@color/YP_White</item>
@@ -38,5 +39,12 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">56dp</item>
+    </style>
+    
+    <style name="textForSearchScreenNothingSearch">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+        <item name="android:fontWeight">400</item>
     </style>
 </resources>
