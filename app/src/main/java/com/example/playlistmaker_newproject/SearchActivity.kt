@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -34,7 +35,7 @@ import java.util.TimeZone
 
 class SearchActivity : AppCompatActivity() {
     private var savedText:String=""
-
+    var lastQuery: String = ""
     private lateinit var searchLine: android.widget.EditText
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,8 +52,8 @@ class SearchActivity : AppCompatActivity() {
         }
 
 
-        val errorState = findViewById<LinearLayout>(R.id.errorPlaceholder)
-        val emptyState = findViewById<LinearLayout>(R.id.stateEmpty)
+        val errorState = findViewById<View>(R.id.errorPlaceholder)
+        val emptyState = findViewById<View>(R.id.stateEmpty)
         val recyclerView = findViewById<RecyclerView>(R.id.track)
         val tracks = ArrayList<Track>()
 
@@ -61,6 +62,8 @@ class SearchActivity : AppCompatActivity() {
             searchLine.text.clear()
             val inputMethodManager = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(searchLine.windowToken, 0)
+            tracks.clear()
+            recyclerView.visibility = View.GONE
         }
 
         val textWatcher1 = object: android.text.TextWatcher {
@@ -113,6 +116,8 @@ class SearchActivity : AppCompatActivity() {
         }
         val apiClient = retrofit.create(APIService::class.java)
 
+        val buttonUpdate = findViewById<Button>(R.id.button_update)
+
         fun performSearch(query: String) {
             if (query.trim().isEmpty()) {
                 showEmptyState()
@@ -121,11 +126,9 @@ class SearchActivity : AppCompatActivity() {
 
             Log.d("SEARCH", "Performing search for: $query")
 
-            // Показываем индикатор загрузки
             recyclerView.visibility = View.GONE
             errorState.visibility = View.GONE
             emptyState.visibility = View.GONE
-            // progressBar.visibility = View.VISIBLE  // добавьте ProgressBar в layout
 
             apiClient.search(query).enqueue(object : Callback<ResultsTracks> {
                 @SuppressLint("NotifyDataSetChanged")
@@ -149,6 +152,7 @@ class SearchActivity : AppCompatActivity() {
                             }
                         } ?: showEmptyState()
                     } else {
+                        lastQuery = query
                         recyclerView.visibility = View.GONE
                         errorState.visibility = View.VISIBLE
                         emptyState.visibility = View.GONE
@@ -156,12 +160,18 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<ResultsTracks>, t: Throwable) {
+                    lastQuery = query
                     recyclerView.visibility = View.GONE
                     errorState.visibility = View.VISIBLE
                     emptyState.visibility = View.GONE
                     Log.e("SEARCH", "Search failed", t)
                 }
             })
+        }
+        buttonUpdate.setOnClickListener{
+            if (lastQuery.isNotEmpty()){
+                performSearch(lastQuery)
+            }
         }
 
 

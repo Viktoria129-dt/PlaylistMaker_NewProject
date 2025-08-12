@@ -57,13 +57,25 @@
         </ImageView>
     </FrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/track"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/track"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+        </androidx.recyclerview.widget.RecyclerView>
 
+        <include
+            android:id="@+id/stateEmpty"
+            layout="@layout/placeholder_search"
+            android:visibility="gone" />
 
+        <include
+            android:id="@+id/errorPlaceholder"
+            layout="@layout/placeholder_search_error"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>
