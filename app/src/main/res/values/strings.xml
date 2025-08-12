@@ -15,7 +15,5 @@
     <string name="yesteday_remastered_2009">Yesterday (Remastered 2009)</string>
     <string name="the_beatles">The Beatles</string>
     <string name="timeOfTrack">2:55</string>
-    <string name="nothingSearch">"Ничего не нашлось"</string>
-    <string name="ErrorSearch">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
-    <string name="update">Обновить</string>
+
 </resources>
