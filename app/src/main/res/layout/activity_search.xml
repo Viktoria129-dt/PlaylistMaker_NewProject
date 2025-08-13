@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:paddingStart="@dimen/frame16"
     android:paddingEnd="@dimen/frame16"
+    android:background="?attr/colorPrimaryVariant"
     android:clipToPadding="false"
     android:clipChildren="false"
     android:orientation="vertical">

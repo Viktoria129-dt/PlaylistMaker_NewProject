@@ -4,6 +4,7 @@ import android.R.attr.level
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
@@ -61,7 +62,7 @@ class SearchActivity : AppCompatActivity() {
             val inputMethodManager = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(searchLine.windowToken, 0)
 
-            recyclerView.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
         }
 
         val textWatcher1 = object: android.text.TextWatcher {
@@ -96,10 +97,38 @@ class SearchActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = trackAdapter
 
-
         recyclerView.visibility = View.GONE
         val errorState = findViewById<View>(R.id.errorPlaceholder)
         val emptyState = findViewById<View>(R.id.stateEmpty)
+
+        fun showEmptyState() {
+            recyclerView.visibility = View.GONE
+            errorState.visibility = View.GONE
+            emptyState.visibility = View.VISIBLE
+        }
+        val textWatcher3 = object : android.text.TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            @SuppressLint("NotifyDataSetChanged")
+            override fun afterTextChanged(p0: Editable?) {
+                if (!p0.isNullOrEmpty()){
+                    tracks.clear()
+                    trackAdapter.notifyDataSetChanged()
+                    recyclerView.visibility = View.GONE
+                    errorState.visibility = View.GONE
+                    emptyState.visibility = View.GONE
+                }
+            }
+        }
+        searchLine.addTextChangedListener(textWatcher3)
+
+
 
 
         val okHttpClient = OkHttpClient.Builder()
@@ -113,11 +142,7 @@ class SearchActivity : AppCompatActivity() {
             .client(okHttpClient)
             .build()
 
-        fun showEmptyState() {
-            recyclerView.visibility = View.GONE
-            errorState.visibility = View.GONE
-            emptyState.visibility = View.VISIBLE
-        }
+
         val apiClient = retrofit.create(APIService::class.java)
 
         val buttonUpdate = findViewById<Button>(R.id.button_update)
