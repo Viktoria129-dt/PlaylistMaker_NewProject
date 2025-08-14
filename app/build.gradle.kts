@@ -37,6 +37,10 @@ android {
 
 
 dependencies {
+    implementation (libs.okhttp)
+    implementation (libs.okhttplog)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
     implementation(libs.androidx.glide)
     annotationProcessor (libs.androidx.glide.compiler)
     implementation(libs.androidx.core.ktx)

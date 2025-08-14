@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:paddingStart="@dimen/frame16"
     android:paddingEnd="@dimen/frame16"
+    android:background="?attr/colorPrimaryVariant"
     android:clipToPadding="false"
     android:clipChildren="false"
     android:orientation="vertical">
@@ -28,6 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/frame16">
         <EditText
+            android:textColor="@color/YP_Black"
             android:id="@+id/searchLine"
             android:layout_width="match_parent"
             android:layout_height="36dp"
@@ -67,7 +69,15 @@
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
         </androidx.recyclerview.widget.RecyclerView>
+        <include
+            android:id="@+id/stateEmpty"
+            layout="@layout/place_holder_search"
+            android:visibility="gone" />
 
+        <include
+            android:id="@+id/errorPlaceholder"
+            layout="@layout/place_holder_search_error"
+            android:visibility="gone" />
 
     </FrameLayout>
 </LinearLayout>
