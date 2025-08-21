@@ -10,6 +10,8 @@ import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -21,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.button.MaterialButton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -37,7 +40,33 @@ import java.util.TimeZone
 class SearchActivity : AppCompatActivity() {
     private var savedText:String=""
     var lastQuery: String = ""
+    private lateinit var historySearch: SearchHistory
+    private var historyResults = ArrayList<Track>()
+    private lateinit var historyAdapter: TrackAdapter
+    private lateinit var clearButtonHistory: Button
+    private lateinit var containerHistory: View
+    private lateinit var searchResultsContainer: View
+    private lateinit var historyRecyclerView : RecyclerView
     private lateinit var searchLine: android.widget.EditText
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun showHistory(){
+        val history = historySearch.getHistory()
+        historyResults.clear()
+        historyResults.addAll(history)
+        historyAdapter.notifyDataSetChanged()
+
+        if (history.isEmpty()){
+            containerHistory.visibility = View.GONE
+            searchResultsContainer.visibility = View.VISIBLE
+        }
+        else{
+            containerHistory.visibility = View.VISIBLE
+            searchResultsContainer.visibility = View.GONE
+        }
+
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -63,6 +92,7 @@ class SearchActivity : AppCompatActivity() {
             inputMethodManager?.hideSoftInputFromWindow(searchLine.windowToken, 0)
 
             recyclerView.visibility = View.GONE
+            showHistory()
         }
 
         val textWatcher1 = object: android.text.TextWatcher {
@@ -93,7 +123,12 @@ class SearchActivity : AppCompatActivity() {
         }
         searchLine.addTextChangedListener(textWatcher2)
 
-        val trackAdapter: TrackAdapter = TrackAdapter(tracks)
+        val trackAdapter: TrackAdapter = TrackAdapter(tracks){
+            track ->
+            historySearch.addTrack(track)  // Добавляем трек в историю
+            showHistory()
+        }
+
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = trackAdapter
 
@@ -147,7 +182,11 @@ class SearchActivity : AppCompatActivity() {
 
         val buttonUpdate = findViewById<Button>(R.id.button_update)
 
+        searchResultsContainer = findViewById<View>(R.id.searchResultsContainer)
+        containerHistory = findViewById<View>(R.id.vgSearchHistory)
         fun performSearch(query: String) {
+            containerHistory.visibility = View.GONE
+            searchResultsContainer.visibility = View.VISIBLE
             if (query.trim().isEmpty()) {
                 showEmptyState()
                 return
@@ -160,6 +199,7 @@ class SearchActivity : AppCompatActivity() {
             emptyState.visibility = View.GONE
 
             apiClient.search(query).enqueue(object : Callback<ResultsTracks> {
+
                 @SuppressLint("NotifyDataSetChanged")
                 override fun onResponse(
                     call: Call<ResultsTracks>,
@@ -216,6 +256,52 @@ class SearchActivity : AppCompatActivity() {
             }
 
         }
+
+        historySearch = SearchHistory(getSharedPreferences("Songs", MODE_PRIVATE))
+
+
+
+        clearButtonHistory = findViewById<Button>(R.id.btnClearHistory)
+        historyRecyclerView = findViewById<RecyclerView>(R.id.recyclerViewSearchHistory)
+
+        historyAdapter = TrackAdapter(historyResults) {
+            track ->
+            historySearch.addTrack(track)
+            showHistory()
+        }
+
+        historyRecyclerView.layoutManager = LinearLayoutManager(this)
+        historyRecyclerView.adapter = historyAdapter
+
+        clearButtonHistory.setOnClickListener{
+            historySearch.clearHistory()
+            historyResults.clear()
+            historyAdapter.notifyDataSetChanged()
+            containerHistory.visibility = View.GONE
+        }
+
+        showHistory()
+
+        val textWatcher4 = object: android.text.TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            @SuppressLint("NotifyDataSetChanged")
+            override fun afterTextChanged(p0: Editable?) {
+                if (p0.isNullOrEmpty()) {
+                    showHistory()
+                } else {
+                    containerHistory.visibility = View.GONE
+                }
+            }
+        }
+
+        searchLine.addTextChangedListener(textWatcher4)
 
 
     }

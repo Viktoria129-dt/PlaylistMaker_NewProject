@@ -49,6 +49,7 @@
             android:text="@string/Darktheme">
         </TextView>
         <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switcher"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:thumbTint="@color/switch_thumb_color"
