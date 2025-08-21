@@ -125,7 +125,6 @@ class SearchActivity : AppCompatActivity() {
 
         val trackAdapter: TrackAdapter = TrackAdapter(tracks){
             track ->
-            searchLine.text.clear()
             historySearch.addTrack(track)  // Добавляем трек в историю
             showHistory()
         }
@@ -267,7 +266,6 @@ class SearchActivity : AppCompatActivity() {
 
         historyAdapter = TrackAdapter(historyResults) {
             track ->
-            searchLine.text.clear()
             historySearch.addTrack(track)
             showHistory()
         }
