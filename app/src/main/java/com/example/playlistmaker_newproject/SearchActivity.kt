@@ -49,6 +49,16 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var historyRecyclerView : RecyclerView
     private lateinit var searchLine: android.widget.EditText
 
+    fun checkHistoryV(){
+        if (searchLine.text.isNullOrEmpty() && historyResults.isNotEmpty()){
+            containerHistory.visibility = View.VISIBLE
+            searchResultsContainer.visibility = View.GONE
+        }
+        else{
+            containerHistory.visibility = View.GONE
+            searchResultsContainer.visibility = View.VISIBLE
+        }
+    }
     @SuppressLint("NotifyDataSetChanged")
     fun showHistory(){
         val history = historySearch.getHistory()
@@ -64,6 +74,9 @@ class SearchActivity : AppCompatActivity() {
             containerHistory.visibility = View.VISIBLE
             searchResultsContainer.visibility = View.GONE
         }
+
+
+        checkHistoryV()
 
 
     }
@@ -293,11 +306,7 @@ class SearchActivity : AppCompatActivity() {
 
             @SuppressLint("NotifyDataSetChanged")
             override fun afterTextChanged(p0: Editable?) {
-                if (p0.isNullOrEmpty()) {
-                    showHistory()
-                } else {
-                    containerHistory.visibility = View.GONE
-                }
+                checkHistoryV()
             }
         }
 
