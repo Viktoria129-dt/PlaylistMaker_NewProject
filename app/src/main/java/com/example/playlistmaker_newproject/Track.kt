@@ -7,6 +7,7 @@ import java.util.Locale
 import java.util.TimeZone
 
 data class Track(
+    val trackId: Int,
     val trackName:String,
     val artistName:String,
     val trackTimeMillis: Long,

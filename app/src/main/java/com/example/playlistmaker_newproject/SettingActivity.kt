@@ -1,10 +1,14 @@
 package com.example.playlistmaker_newproject
 
+import android.app.Application
 import android.content.Intent
 import android.net.Uri
+import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingActivity : androidx.appcompat.app.AppCompatActivity() {
     @android.annotation.SuppressLint("MissingInflatedId")
@@ -42,5 +46,13 @@ class SettingActivity : androidx.appcompat.app.AppCompatActivity() {
             rightIntent.data = android.net.Uri.parse(getString(R.string.linkAndroidDeveloper))
             startActivity(rightIntent)
         }
+
+
+        val switcher = findViewById<SwitchMaterial>(R.id.switcher)
+        switcher.isChecked = (applicationContext as App).darkTheme
+        switcher.setOnCheckedChangeListener{ switcher, checked ->
+            (applicationContext as App).SwitchTheme(checked)
+        }
+
     }
 }
