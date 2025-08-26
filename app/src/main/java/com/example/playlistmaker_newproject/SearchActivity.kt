@@ -3,6 +3,7 @@ package com.example.playlistmaker_newproject
 import android.R.attr.level
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker_newproject.MainActivity
 import com.google.android.material.button.MaterialButton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -140,6 +142,9 @@ class SearchActivity : AppCompatActivity() {
             track ->
             historySearch.addTrack(track)  // Добавляем трек в историю
             showHistory()
+            val song = Intent(this@SearchActivity, AudioplayerActivity::class.java)
+            song.putExtra("TRACK", track)
+            startActivity(song)
         }
 
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -154,6 +159,7 @@ class SearchActivity : AppCompatActivity() {
             errorState.visibility = View.GONE
             emptyState.visibility = View.VISIBLE
         }
+
         val textWatcher3 = object : android.text.TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -271,9 +277,6 @@ class SearchActivity : AppCompatActivity() {
         }
 
         historySearch = SearchHistory(getSharedPreferences("Songs", MODE_PRIVATE))
-
-
-
         clearButtonHistory = findViewById<Button>(R.id.btnClearHistory)
         historyRecyclerView = findViewById<RecyclerView>(R.id.recyclerViewSearchHistory)
 
@@ -281,6 +284,9 @@ class SearchActivity : AppCompatActivity() {
             track ->
             historySearch.addTrack(track)
             showHistory()
+            val song = Intent(this@SearchActivity, AudioplayerActivity::class.java)
+            song.putExtra("TRACK", track)
+            startActivity(song)
         }
 
         historyRecyclerView.layoutManager = LinearLayoutManager(this)

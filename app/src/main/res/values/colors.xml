@@ -8,5 +8,8 @@
     <color name="YP_Text_Gray">#AEAFB4</color>
     <color name="YP_Red">#F56B6C</color>
     <color name="YP_Background">#1A1B2240</color>
+    <color name="YP_Gray_for_button_Light">#C5C6C7</color>
+    <color name="YP_Gray_for_button_Dark">#535459</color>
+
 
 </resources>
