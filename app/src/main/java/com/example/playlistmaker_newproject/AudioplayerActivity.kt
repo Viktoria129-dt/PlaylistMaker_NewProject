@@ -6,13 +6,12 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import org.w3c.dom.Text
 
 class AudioplayerActivity : androidx.appcompat.app.AppCompatActivity() {
     lateinit var currentTrack: Track
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.example.playlistmaker_newproject.R.layout.audioplayer)
+        setContentView(R.layout.audioplayer)
         val buttonBackAudio = findViewById<ImageButton>(R.id.backAudio)
         buttonBackAudio.setOnClickListener{
             finish()
