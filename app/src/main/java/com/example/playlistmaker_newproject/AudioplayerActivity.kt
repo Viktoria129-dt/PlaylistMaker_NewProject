@@ -33,7 +33,7 @@ class AudioplayerActivity : androidx.appcompat.app.AppCompatActivity() {
         val trackName = findViewById<TextView>(R.id.NameOfSong)
         val AuthorName = findViewById<TextView>(R.id.nameOfAuthor)
         val timeOfTrack = findViewById<TextView>(R.id.timeNumbers)
-        val albumName = findViewById<TextView>(R.id.nameOfAlbom)
+        val albumName = findViewById<TextView>(R.id.nameOfAlbum)
         val yearRelease = findViewById<TextView>(R.id.yearNumbers)
         val genreOfSong = findViewById<TextView>(R.id.nameOfGenre)
         val country = findViewById<TextView>(R.id.nameOfCountry)
@@ -62,6 +62,5 @@ class AudioplayerActivity : androidx.appcompat.app.AppCompatActivity() {
             releaseDate
         }
     }
-
 }
 

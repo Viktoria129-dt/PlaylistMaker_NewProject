@@ -205,7 +205,7 @@ class SearchActivity : AppCompatActivity() {
         }
         searchLine.addTextChangedListener(textWatcher1)
 
-        trackAdapter = TrackAdapter(tracks) { track ->
+        trackAdapter = TrackAdapter(tracks, isPlayerLayout = false) { track ->
             if (track != null) {
                 historySearch.addTrack(track)
                 showHistory()
@@ -257,7 +257,7 @@ class SearchActivity : AppCompatActivity() {
         clearButtonHistory = findViewById<Button>(R.id.btnClearHistory)
         historyRecyclerView = findViewById<RecyclerView>(R.id.recyclerViewSearchHistory)
 
-        historyAdapter = TrackAdapter(historyResults) { track ->
+        historyAdapter = TrackAdapter(historyResults, isPlayerLayout = false) { track ->
             if (track != null) {
                 historySearch.addTrack(track)
                 showHistory()
