@@ -3,5 +3,6 @@
     <attr name="searchEditTextColor" format="color|reference" />
     <attr name="searchEditTextBackground" format="reference" />
     <attr name="iconDarkThemeSettings" format="color|reference" />
+    <attr name="buttonplusLike" format="color|reference"/>
 
 </resources>

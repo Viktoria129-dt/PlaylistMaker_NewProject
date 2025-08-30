@@ -12,6 +12,7 @@
     <item name="searchEditTextBackground">@color/YP_White</item>
     <item name="searchEditTextColor">@color/YP_Black</item>
     <item name="iconDarkThemeSettings">@color/YP_White</item>
+    <item name="buttonplusLike">@color/YP_Gray_for_button_Dark</item>
 
 
 </style>
