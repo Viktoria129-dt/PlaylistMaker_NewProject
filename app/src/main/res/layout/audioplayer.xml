@@ -47,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            app:constraint_referenced_ids="timenotNumbers,albom,year,genre,country"
             app:layout_constraintGuide_end="24dp">
         </androidx.constraintlayout.widget.Guideline>
 
@@ -255,6 +256,7 @@
             android:fontFamily="@font/ys_display_regular"
             android:textSize="13sp"
             android:ellipsize="end"
+            android:gravity="end|center_vertical"
             android:maxLines="1"
             android:textColor="?attr/colorSecondary"
             android:text="Yesterday (Remastered 2009)"
@@ -273,6 +275,7 @@
             android:textSize="13sp"
             android:textColor="?attr/colorSecondary"
             android:text="1965"
+            android:gravity="end|center_vertical"
             app:layout_constraintStart_toEndOf="@id/labelsBarrier"
             app:layout_constraintTop_toTopOf="@id/year"
             app:layout_constraintEnd_toStartOf="@id/backBorder2"
@@ -288,6 +291,7 @@
             android:textSize="13sp"
             android:textColor="?attr/colorSecondary"
             android:text="Rock"
+            android:gravity="end|center_vertical"
             app:layout_constraintStart_toEndOf="@id/labelsBarrier"
             app:layout_constraintTop_toTopOf="@id/genre"
             app:layout_constraintEnd_toStartOf="@id/backBorder2"
@@ -303,6 +307,7 @@
             android:textSize="13sp"
             android:textColor="?attr/colorSecondary"
             android:text="Великобритания"
+            android:gravity="end|center_vertical"
             app:layout_constraintStart_toEndOf="@id/labelsBarrier"
             app:layout_constraintTop_toTopOf="@id/country"
             app:layout_constraintEnd_toStartOf="@id/backBorder2"
