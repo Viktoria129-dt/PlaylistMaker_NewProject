@@ -11,6 +11,7 @@
         <item name="searchEditTextBackground">@color/YP_Light_Grey</item>
         <item name="searchEditTextColor">@color/YP_Text_Gray</item>
         <item name="iconDarkThemeSettings">@color/YP_Text_Gray</item>
+        <item name="buttonplusLike">@color/YP_Gray_for_button_Light</item>
     </style>
 
     <style name="Theme.PlaylistMaker_App" parent="Base.Theme.PlaylistMaker_App" />

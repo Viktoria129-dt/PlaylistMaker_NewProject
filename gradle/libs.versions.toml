@@ -33,3 +33,4 @@ okhttplog = {group = "com.squareup.okhttp3", name = "logging-interceptor", versi
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
+
