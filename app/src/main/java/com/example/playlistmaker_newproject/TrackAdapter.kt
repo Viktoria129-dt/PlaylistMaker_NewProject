@@ -39,4 +39,8 @@ class TrackAdapter(
         const val VIEW_TYPE_LIST = 0
         const val VIEW_TYPE_PLAYER = 1
     }
+
+    fun interface trackClickListener{
+        fun trackClick(track: Track)
+    }
 }
