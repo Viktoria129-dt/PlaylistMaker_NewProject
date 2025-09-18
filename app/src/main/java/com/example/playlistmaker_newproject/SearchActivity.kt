@@ -4,7 +4,10 @@ import android.R.attr.level
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.util.Log
 import android.util.TypedValue
@@ -14,8 +17,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +32,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker_newproject.MainActivity
 import com.google.android.material.button.MaterialButton
 import okhttp3.OkHttpClient
+import okhttp3.internal.http2.Http2Reader
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Callback
@@ -56,8 +62,31 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var emptyState: View
     private val tracks = ArrayList<Track>()
 
+    private lateinit var progressBar: ProgressBar
 
+    companion object{
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
 
+    private val searchRunnable = Runnable{performSearch(lastQuery)}
+
+    private fun searchDebounce(query: String){
+        handler.removeCallbacks(searchRunnable)
+        lastQuery = query
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    private fun CliclDebounce(): Boolean{
+        val current = isClickAllowed
+        if (current){
+            isClickAllowed = false
+            handler.postDelayed({isClickAllowed = true}, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
     fun checkHistoryV() {
         if (searchLine.text.isNullOrEmpty() && historyResults.isNotEmpty()) {
             containerHistory.visibility = View.VISIBLE
@@ -114,6 +143,8 @@ class SearchActivity : AppCompatActivity() {
         recyclerView.visibility = View.GONE
         errorState.visibility = View.GONE
         emptyState.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
+
 
         apiClient.search(query).enqueue(object : Callback<ResultsTracks> {
 
@@ -134,6 +165,7 @@ class SearchActivity : AppCompatActivity() {
                             recyclerView.visibility = View.VISIBLE
                             errorState.visibility = View.GONE
                             emptyState.visibility = View.GONE
+                            progressBar.visibility = View.GONE
                         } else {
                             Log.d("SEARCH_DEBUG", "No results found")
                             showEmptyState()
@@ -145,6 +177,7 @@ class SearchActivity : AppCompatActivity() {
                     recyclerView.visibility = View.GONE
                     errorState.visibility = View.VISIBLE
                     emptyState.visibility = View.GONE
+                    progressBar.visibility = View.GONE
                 }
             }
 
@@ -153,10 +186,12 @@ class SearchActivity : AppCompatActivity() {
                 recyclerView.visibility = View.GONE
                 errorState.visibility = View.VISIBLE
                 emptyState.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 Log.e("SEARCH", "Search failed", t)
             }
         })
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -167,10 +202,12 @@ class SearchActivity : AppCompatActivity() {
         searchLine = findViewById<android.widget.EditText>(com.example.playlistmaker_newproject.R.id.searchLine)
         errorState = findViewById(R.id.errorPlaceholder)
         emptyState = findViewById(R.id.stateEmpty)
+        progressBar = findViewById<ProgressBar>(R.id.ProgressBar)
         Log.d("SEARCH_DEBUG", "searchLine found: ${searchLine != null}")
         if (savedInstanceState != null) {
             savedText = savedInstanceState.getString("SAVED_TEXT") ?: ""
         }
+
 
         val buttonBack = findViewById<com.google.android.material.appbar.MaterialToolbar>(com.example.playlistmaker_newproject.R.id.bttnBack)
         buttonBack.setOnClickListener {
@@ -197,6 +234,7 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 savedText = p0?.toString() ?: ""
                 clearButton.visibility = if (p0.isNullOrEmpty()) android.view.View.GONE else android.view.View.VISIBLE
+                searchDebounce(savedText)
 
             }
 
@@ -206,7 +244,7 @@ class SearchActivity : AppCompatActivity() {
         searchLine.addTextChangedListener(textWatcher1)
 
         trackAdapter = TrackAdapter(tracks, isPlayerLayout = false) { track ->
-            if (track != null) {
+            if (track != null && CliclDebounce()) {
                 historySearch.addTrack(track)
                 showHistory()
                 val song = Intent(this@SearchActivity, AudioplayerActivity::class.java)
@@ -215,6 +253,7 @@ class SearchActivity : AppCompatActivity() {
             } else {
                 Log.e("SEARCH", "Track is null! Cannot open player")
             }
+
         }
 
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -279,7 +318,6 @@ class SearchActivity : AppCompatActivity() {
             containerHistory.visibility = View.GONE
         }
         showHistory()
-
     }
 
     override fun onSaveInstanceState(outState: android.os.Bundle) {
