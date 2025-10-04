@@ -1,7 +1,5 @@
-package com.example.playlistmaker_newproject
+package com.example.playlistmaker_newproject.domain.models
 
-import android.R.attr.name
-import android.os.Parcel
 import kotlinx.parcelize.Parcelize
 import android.os.Parcelable
 import java.text.SimpleDateFormat

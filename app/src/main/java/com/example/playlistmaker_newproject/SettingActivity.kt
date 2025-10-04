@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.playlistmaker_newproject.di.Creator
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingActivity : androidx.appcompat.app.AppCompatActivity() {
@@ -49,9 +50,9 @@ class SettingActivity : androidx.appcompat.app.AppCompatActivity() {
 
 
         val switcher = findViewById<SwitchMaterial>(R.id.switcher)
-        switcher.isChecked = (applicationContext as App).darkTheme
-        switcher.setOnCheckedChangeListener{ switcher, checked ->
-            (applicationContext as App).SwitchTheme(checked)
+        switcher.isChecked = Creator.provideThemeInteractor(this).isDarkTheme()
+        switcher.setOnCheckedChangeListener { _, checked ->
+            Creator.provideThemeInteractor(this).switchTheme(checked)
         }
 
     }

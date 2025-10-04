@@ -1,10 +1,10 @@
-package com.example.playlistmaker_newproject
+package com.example.playlistmaker_newproject.presentation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker_newproject.R
+import com.example.playlistmaker_newproject.domain.models.Track
 
 class TrackAdapter(
     private val tracks: List<Track>,
