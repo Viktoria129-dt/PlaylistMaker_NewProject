@@ -1,5 +1,6 @@
-package com.example.playlistmaker_newproject
+package com.example.playlistmaker_newproject.data.network
 
+import com.example.playlistmaker_newproject.data.dto.ResultsTracks
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
