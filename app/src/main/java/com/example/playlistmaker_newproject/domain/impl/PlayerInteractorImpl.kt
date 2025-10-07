@@ -6,9 +6,10 @@ import com.example.playlistmaker_newproject.domain.api.PlayerInteractor.Companio
 import com.example.playlistmaker_newproject.domain.api.PlayerInteractor.Companion.STATE_PAUSED
 import com.example.playlistmaker_newproject.domain.api.PlayerInteractor.Companion.STATE_PLAYING
 import com.example.playlistmaker_newproject.domain.api.PlayerInteractor.Companion.STATE_PREPARED
+import com.example.playlistmaker_newproject.domain.api.PlayerRepository
 import com.example.playlistmaker_newproject.domain.models.Track
 
-class PlayerInteractorImpl : PlayerInteractor {
+class PlayerInteractorImpl(private val playerRepository: PlayerRepository) : PlayerInteractor {
 
     private val mediaPlayer = MediaPlayer()
     private var playerState = STATE_DEFAULT

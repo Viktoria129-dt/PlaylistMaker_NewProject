@@ -1,26 +1,29 @@
-package com.example.playlistmaker_newproject
+package com.example.playlistmaker_newproject.presentation
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker_newproject.R
 import com.example.playlistmaker_newproject.di.Creator
 import com.example.playlistmaker_newproject.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker_newproject.domain.api.SearchInteractor
 import com.example.playlistmaker_newproject.domain.models.Track
-import com.example.playlistmaker_newproject.presentation.TrackAdapter
-
+import com.google.android.material.appbar.MaterialToolbar
 
 class SearchActivity : AppCompatActivity() {
     private var savedText: String = ""
@@ -31,7 +34,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var containerHistory: View
     private lateinit var searchResultsContainer: View
     private lateinit var historyRecyclerView: RecyclerView
-    private lateinit var searchLine: android.widget.EditText
+    private lateinit var searchLine: EditText
     private lateinit var errorState: View
     private lateinit var recyclerView: RecyclerView
     private lateinit var trackAdapter: TrackAdapter
@@ -143,9 +146,9 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        searchInteractor = Creator.provideSearchInteractor()
+        searchInteractor = Creator.provideSearchInteractor(this)
         searchHistoryInteractor = Creator.provideSearchHistoryInteractor(this)
-        searchLine = findViewById<android.widget.EditText>(com.example.playlistmaker_newproject.R.id.searchLine)
+        searchLine = findViewById<EditText>(R.id.searchLine)
         errorState = findViewById(R.id.errorPlaceholder)
         emptyState = findViewById(R.id.stateEmpty)
         progressBar = findViewById<ProgressBar>(R.id.ProgressBar)
@@ -154,35 +157,35 @@ class SearchActivity : AppCompatActivity() {
         }
 
 
-        val buttonBack = findViewById<com.google.android.material.appbar.MaterialToolbar>(com.example.playlistmaker_newproject.R.id.bttnBack)
+        val buttonBack = findViewById<MaterialToolbar>(R.id.bttnBack)
         buttonBack.setOnClickListener {
             finish()
         }
         recyclerView = findViewById<RecyclerView>(R.id.track)
 
-        val clearButton = findViewById<android.widget.ImageView>(com.example.playlistmaker_newproject.R.id.clearIcon)
+        val clearButton = findViewById<ImageView>(R.id.clearIcon)
         clearButton.setOnClickListener {
             searchLine.text.clear()
             tracks.clear()
-            val inputMethodManager = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
+            val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(searchLine.windowToken, 0)
             recyclerView.visibility = View.GONE
             showHistory()
         }
 
-        val textWatcher1 = object : android.text.TextWatcher {
+        val textWatcher1 = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 savedText = p0?.toString() ?: ""
-                clearButton.visibility = if (p0.isNullOrEmpty()) android.view.View.GONE else android.view.View.VISIBLE
+                clearButton.visibility = if (p0.isNullOrEmpty()) View.GONE else View.VISIBLE
                 searchDebounce(savedText)
 
             }
 
-            override fun afterTextChanged(p0: android.text.Editable?) {
+            override fun afterTextChanged(p0: Editable?) {
             }
         }
         searchLine.addTextChangedListener(textWatcher1)
@@ -222,7 +225,7 @@ class SearchActivity : AppCompatActivity() {
             Log.d("SEARCH_DEBUG", "Editor action: $actionId")
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 Log.d("SEARCH_DEBUG", "Performing search...")
-                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(searchLine.windowToken, 0)
                 performSearch(searchLine.text.toString())
                 Log.d("SEARCH_DEBUG", "Search performed")
@@ -258,16 +261,14 @@ class SearchActivity : AppCompatActivity() {
         showHistory()
     }
 
-    override fun onSaveInstanceState(outState: android.os.Bundle) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("SAVED_TEXT", savedText)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: android.os.Bundle) {
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val restoredText = savedInstanceState.getString("SAVED_TEXT")
         searchLine.setText(restoredText)
     }
 }
-
-

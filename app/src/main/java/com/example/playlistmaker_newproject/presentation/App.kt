@@ -1,8 +1,6 @@
-package com.example.playlistmaker_newproject
+package com.example.playlistmaker_newproject.presentation
 
 import android.app.Application
-import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker_newproject.di.Creator
 import com.example.playlistmaker_newproject.domain.api.ThemeInteractor
 

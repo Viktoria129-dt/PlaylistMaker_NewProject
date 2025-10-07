@@ -1,21 +1,24 @@
-package com.example.playlistmaker_newproject
+package com.example.playlistmaker_newproject.presentation
 
-import android.media.MediaPlayer
+import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.example.playlistmaker_newproject.R
 import com.example.playlistmaker_newproject.di.Creator
 import com.example.playlistmaker_newproject.domain.api.PlayerInteractor
 import com.example.playlistmaker_newproject.domain.models.Track
 import com.example.playlistmaker_newproject.domain.models.formatTrackDuration
 import java.util.Locale
 
-class AudioplayerActivity : androidx.appcompat.app.AppCompatActivity() {
+class AudioplayerActivity : AppCompatActivity() {
     private lateinit var buttonPlay: ImageButton
     private lateinit var timeOfSong: TextView
     private lateinit var playerInteractor: PlayerInteractor
@@ -32,12 +35,12 @@ class AudioplayerActivity : androidx.appcompat.app.AppCompatActivity() {
         val seconds = milliseconds / 1000
         val minutes = seconds / 60
         val remainingSeconds = seconds % 60
-        return String.format(Locale.getDefault(), "%02d:%02d", minutes, remainingSeconds)
+        return String.Companion.format(Locale.getDefault(), "%02d:%02d", minutes, remainingSeconds)
     }
 
     private fun updateProgress() {
         // ИСПРАВИТЬ: использовать playerInteractor вместо playerState
-        if (playerInteractor.getPlayerState() == PlayerInteractor.STATE_PLAYING) {
+        if (playerInteractor.getPlayerState() == PlayerInteractor.Companion.STATE_PLAYING) {
             val currentPosition = playerInteractor.getCurrentPosition()
             timeOfSong.text = formatTime(currentPosition)
         }
@@ -60,13 +63,13 @@ class AudioplayerActivity : androidx.appcompat.app.AppCompatActivity() {
     private fun playbackControl() {
         // ИСПРАВИТЬ: использовать playerInteractor вместо playerState
         when (playerInteractor.getPlayerState()) {
-            PlayerInteractor.STATE_PLAYING -> {
+            PlayerInteractor.Companion.STATE_PLAYING -> {
                 pausePlayer()
             }
-            PlayerInteractor.STATE_PAUSED -> {
+            PlayerInteractor.Companion.STATE_PAUSED -> {
                 startPlayer()
             }
-            PlayerInteractor.STATE_PREPARED -> {
+            PlayerInteractor.Companion.STATE_PREPARED -> {
                 startPlayer()
             }
         }
@@ -74,7 +77,7 @@ class AudioplayerActivity : androidx.appcompat.app.AppCompatActivity() {
 
     private lateinit var currentTrack: Track
 
-    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.audioplayer)
 
@@ -88,7 +91,7 @@ class AudioplayerActivity : androidx.appcompat.app.AppCompatActivity() {
 
         mainTread = Handler(Looper.getMainLooper())
 
-        val track = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+        val track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra("TRACK", Track::class.java)
         } else {
             @Suppress("DEPRECATION")
@@ -168,4 +171,3 @@ class AudioplayerActivity : androidx.appcompat.app.AppCompatActivity() {
         }
     }
 }
-
