@@ -1,65 +1,46 @@
-package com.example.playlistmaker_newproject
+package com.example.playlistmaker_newproject.presentation
 
-import android.R.attr.level
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
-import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemClickListener
 import android.widget.Button
-import android.widget.ImageButton
+import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker_newproject.MainActivity
-import com.google.android.material.button.MaterialButton
-import okhttp3.OkHttpClient
-import okhttp3.internal.http2.Http2Reader
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
-
+import com.example.playlistmaker_newproject.R
+import com.example.playlistmaker_newproject.di.Creator
+import com.example.playlistmaker_newproject.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker_newproject.domain.api.SearchInteractor
+import com.example.playlistmaker_newproject.domain.models.Track
+import com.google.android.material.appbar.MaterialToolbar
 
 class SearchActivity : AppCompatActivity() {
     private var savedText: String = ""
     var lastQuery: String = ""
-    private lateinit var historySearch: SearchHistory
     private var historyResults = ArrayList<Track>()
     private lateinit var historyAdapter: TrackAdapter
     private lateinit var clearButtonHistory: Button
     private lateinit var containerHistory: View
     private lateinit var searchResultsContainer: View
     private lateinit var historyRecyclerView: RecyclerView
-    private lateinit var searchLine: android.widget.EditText
+    private lateinit var searchLine: EditText
     private lateinit var errorState: View
     private lateinit var recyclerView: RecyclerView
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var emptyState: View
+    private lateinit var searchInteractor: SearchInteractor
+    private lateinit var searchHistoryInteractor: SearchHistoryInteractor
     private val tracks = ArrayList<Track>()
 
     private lateinit var progressBar: ProgressBar
@@ -99,7 +80,7 @@ class SearchActivity : AppCompatActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     fun showHistory() {
-        val history = historySearch.getHistory()
+        val history = searchHistoryInteractor.getHistory()
         historyResults.clear()
         historyResults.addAll(history)
         historyAdapter.notifyDataSetChanged()
@@ -119,20 +100,8 @@ class SearchActivity : AppCompatActivity() {
         emptyState.visibility = View.VISIBLE
     }
     fun performSearch(query: String) {
-        Log.d("SEARCH_DEBUG", "=== PERFORM SEARCH STARTED ===")
-        Log.d("SEARCH_DEBUG", "Query: '$query'")
-        val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
-            .build()
-        Log.d("SEARCH_DEBUG", "OkHttpClient created")
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://itunes.apple.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
-        val apiClient = retrofit.create(APIService::class.java)
+
+
         containerHistory.visibility = View.GONE
         searchResultsContainer.visibility = View.VISIBLE
         if (query.trim().isEmpty()) {
@@ -146,48 +115,29 @@ class SearchActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
 
 
-        apiClient.search(query).enqueue(object : Callback<ResultsTracks> {
-
+        searchInteractor.searchTracks(query, object : SearchInteractor.SearchCallback {
             @SuppressLint("NotifyDataSetChanged")
-            override fun onResponse(
-                call: Call<ResultsTracks>,
-                response: Response<ResultsTracks>
-            ) {
-                Log.d("SEARCH_DEBUG", "Response received: ${response.isSuccessful}")
-                Log.d("SEARCH_DEBUG", "Response code: ${response.code()}")
-                if (response.isSuccessful) {
-                    response.body()?.let { results ->
-                        Log.d("SEARCH_DEBUG", "Results count: ${results.results.size}")
-                        if (results.results.isNotEmpty()) {
-                            tracks.clear()
-                            tracks.addAll(results.results)
-                            trackAdapter.notifyDataSetChanged()
-                            recyclerView.visibility = View.VISIBLE
-                            errorState.visibility = View.GONE
-                            emptyState.visibility = View.GONE
-                            progressBar.visibility = View.GONE
-                        } else {
-                            Log.d("SEARCH_DEBUG", "No results found")
-                            showEmptyState()
-                        }
-                    } ?: showEmptyState()
-                } else {
-                    Log.d("SEARCH_DEBUG", "Response not successful")
-                    lastQuery = query
-                    recyclerView.visibility = View.GONE
-                    errorState.visibility = View.VISIBLE
+            override fun onSuccess(results: List<Track>) {
+                if (results.isNotEmpty()) {
+                    tracks.clear()
+                    tracks.addAll(results)
+                    trackAdapter.notifyDataSetChanged()
+                    recyclerView.visibility = View.VISIBLE
+                    errorState.visibility = View.GONE
                     emptyState.visibility = View.GONE
                     progressBar.visibility = View.GONE
+                } else {
+                    showEmptyState()
                 }
             }
 
-            override fun onFailure(call: Call<ResultsTracks>, t: Throwable) {
+            override fun onError(error: String) {
                 lastQuery = query
                 recyclerView.visibility = View.GONE
                 errorState.visibility = View.VISIBLE
                 emptyState.visibility = View.GONE
                 progressBar.visibility = View.GONE
-                Log.e("SEARCH", "Search failed", t)
+                Log.e("SEARCH", "Search failed: $error")
             }
         })
     }
@@ -195,65 +145,59 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("SEARCH_DEBUG", "onCreate started")
         setContentView(R.layout.activity_search)
-        Log.d("SEARCH_DEBUG", "setContentView completed")
-
-        searchLine = findViewById<android.widget.EditText>(com.example.playlistmaker_newproject.R.id.searchLine)
+        searchInteractor = Creator.provideSearchInteractor(this)
+        searchHistoryInteractor = Creator.provideSearchHistoryInteractor(this)
+        searchLine = findViewById<EditText>(R.id.searchLine)
         errorState = findViewById(R.id.errorPlaceholder)
         emptyState = findViewById(R.id.stateEmpty)
         progressBar = findViewById<ProgressBar>(R.id.ProgressBar)
-        Log.d("SEARCH_DEBUG", "searchLine found: ${searchLine != null}")
         if (savedInstanceState != null) {
             savedText = savedInstanceState.getString("SAVED_TEXT") ?: ""
         }
 
 
-        val buttonBack = findViewById<com.google.android.material.appbar.MaterialToolbar>(com.example.playlistmaker_newproject.R.id.bttnBack)
+        val buttonBack = findViewById<MaterialToolbar>(R.id.bttnBack)
         buttonBack.setOnClickListener {
             finish()
         }
         recyclerView = findViewById<RecyclerView>(R.id.track)
 
-        val clearButton = findViewById<android.widget.ImageView>(com.example.playlistmaker_newproject.R.id.clearIcon)
+        val clearButton = findViewById<ImageView>(R.id.clearIcon)
         clearButton.setOnClickListener {
-            Log.d("SEARCH_DEBUG", "Clear button clicked - should clear text")
             searchLine.text.clear()
             tracks.clear()
-            val inputMethodManager = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
+            val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(searchLine.windowToken, 0)
             recyclerView.visibility = View.GONE
             showHistory()
         }
 
-        val textWatcher1 = object : android.text.TextWatcher {
+        val textWatcher1 = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 savedText = p0?.toString() ?: ""
-                clearButton.visibility = if (p0.isNullOrEmpty()) android.view.View.GONE else android.view.View.VISIBLE
+                clearButton.visibility = if (p0.isNullOrEmpty()) View.GONE else View.VISIBLE
                 searchDebounce(savedText)
 
             }
 
-            override fun afterTextChanged(p0: android.text.Editable?) {
+            override fun afterTextChanged(p0: Editable?) {
             }
         }
         searchLine.addTextChangedListener(textWatcher1)
 
         trackAdapter = TrackAdapter(tracks, isPlayerLayout = false) { track ->
             if (track != null && CliclDebounce()) {
-                historySearch.addTrack(track)
+                searchHistoryInteractor.addTrack(track)
                 showHistory()
                 val song = Intent(this@SearchActivity, AudioplayerActivity::class.java)
                 song.putExtra("TRACK", track)
                 startActivity(song)
-            } else {
-                Log.e("SEARCH", "Track is null! Cannot open player")
             }
-
         }
 
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -278,33 +222,30 @@ class SearchActivity : AppCompatActivity() {
 
 
         searchLine.setOnEditorActionListener { _, actionId, _ ->
-            Log.d("SEARCH_DEBUG", "Editor action: $actionId, text: '${searchLine.text}'")
+            Log.d("SEARCH_DEBUG", "Editor action: $actionId")
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                Log.d("SEARCH_DEBUG", "Calling performSearch with: '${searchLine.text}'")
-                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                Log.d("SEARCH_DEBUG", "Performing search...")
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(searchLine.windowToken, 0)
                 performSearch(searchLine.text.toString())
-                true
+                Log.d("SEARCH_DEBUG", "Search performed")
+                false
             } else {
-                Log.d("SEARCH_DEBUG", "Other action, not handled")
                 false
             }
-
         }
 
-        historySearch = SearchHistory(getSharedPreferences("Songs", MODE_PRIVATE))
         clearButtonHistory = findViewById<Button>(R.id.btnClearHistory)
         historyRecyclerView = findViewById<RecyclerView>(R.id.recyclerViewSearchHistory)
 
         historyAdapter = TrackAdapter(historyResults, isPlayerLayout = false) { track ->
             if (track != null) {
-                historySearch.addTrack(track)
+                searchHistoryInteractor.addTrack(track)
                 showHistory()
                 val song = Intent(this@SearchActivity, AudioplayerActivity::class.java)
                 song.putExtra("TRACK", track)
                 startActivity(song)
             } else {
-                Log.e("SEARCH", "History track is null! Cannot open player")
             }
         }
 
@@ -312,7 +253,7 @@ class SearchActivity : AppCompatActivity() {
         historyRecyclerView.adapter = historyAdapter
 
         clearButtonHistory.setOnClickListener {
-            historySearch.clearHistory()
+            searchHistoryInteractor.clearHistory()
             historyResults.clear()
             historyAdapter.notifyDataSetChanged()
             containerHistory.visibility = View.GONE
@@ -320,12 +261,12 @@ class SearchActivity : AppCompatActivity() {
         showHistory()
     }
 
-    override fun onSaveInstanceState(outState: android.os.Bundle) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("SAVED_TEXT", savedText)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: android.os.Bundle) {
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val restoredText = savedInstanceState.getString("SAVED_TEXT")
         searchLine.setText(restoredText)

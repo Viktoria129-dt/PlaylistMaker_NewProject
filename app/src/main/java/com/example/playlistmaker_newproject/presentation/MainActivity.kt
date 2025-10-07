@@ -1,22 +1,15 @@
-package com.example.playlistmaker_newproject
+package com.example.playlistmaker_newproject.presentation
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.example.playlistmaker_newproject.presentation.MediatekaActivity
+import com.example.playlistmaker_newproject.R
+import com.example.playlistmaker_newproject.presentation.SearchActivity
+import com.example.playlistmaker_newproject.presentation.SettingActivity
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
@@ -25,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val searchButton = findViewById<Button>(R.id.firstButton)
-        val searchButtonClickListener:View.OnClickListener = object: View.OnClickListener{
+        val searchButtonClickListener: View.OnClickListener = object: View.OnClickListener{
             override fun onClick(v: View?){
                 val searchActivity = Intent(this@MainActivity, SearchActivity::class.java)
                 startActivity(searchActivity)
