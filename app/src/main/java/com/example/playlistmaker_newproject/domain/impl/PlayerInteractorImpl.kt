@@ -11,39 +11,40 @@ import com.example.playlistmaker_newproject.domain.models.Track
 
 class PlayerInteractorImpl(private val playerRepository: PlayerRepository) : PlayerInteractor {
 
-    private val mediaPlayer = MediaPlayer()
+
     private var playerState = STATE_DEFAULT
 
     override fun prepare(track: Track, onPrepared: () -> Unit, onCompletion: () -> Unit) {
-        mediaPlayer.setDataSource(track.previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playerState = STATE_PREPARED
-            onPrepared()
-        }
-        mediaPlayer.setOnCompletionListener {
-            playerState = STATE_PREPARED
-            onCompletion()
-        }
+        playerState = STATE_DEFAULT
+        playerRepository.prepare(track.previewUrl,
+            onPrepared = {
+                playerState = STATE_PREPARED
+                onPrepared()
+            },
+            onCompletion = {
+                playerState = STATE_PREPARED
+                onCompletion()
+            }
+        )
     }
 
     override fun play() {
-        mediaPlayer.start()
+        playerRepository.start()
         playerState = STATE_PLAYING
     }
 
     override fun pause() {
-        mediaPlayer.pause()
+        playerRepository.pause()
         playerState = STATE_PAUSED
     }
 
     override fun release() {
-        mediaPlayer.release()
+        playerRepository.release()
         playerState = STATE_DEFAULT
     }
 
     override fun getCurrentPosition(): Int {
-        return mediaPlayer.currentPosition
+        return playerRepository.getCurrentPosition()
     }
 
     override fun getPlayerState(): Int {
