@@ -1,4 +1,4 @@
-package com.example.playlistmaker_newproject
+package com.example.playlistmaker_newproject.presentation
 
 import android.content.Context
 import android.util.Log
@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-
-
-import org.w3c.dom.Text
+import com.example.playlistmaker_newproject.R
+import com.example.playlistmaker_newproject.presentation.TrackAdapter
+import com.example.playlistmaker_newproject.domain.models.Track
 
 class TrackHolder(itemView: View, viewType: Int) : RecyclerView.ViewHolder(itemView) {
 
-    private val isPlayerLayout: Boolean = viewType == TrackAdapter.VIEW_TYPE_PLAYER
+    private val isPlayerLayout: Boolean = viewType == TrackAdapter.Companion.VIEW_TYPE_PLAYER
 
     // Обязательные поля
     private val trackName: TextView = itemView.findViewById(R.id.NameOfSong)
@@ -61,8 +61,8 @@ class TrackHolder(itemView: View, viewType: Int) : RecyclerView.ViewHolder(itemV
         Log.d("TRACK_HOLDER", "=== NEW TRACKHOLDER CREATED ===")
         Log.d("TRACK_HOLDER", "viewType: $viewType")
         Log.d("TRACK_HOLDER", "isPlayerLayout: $isPlayerLayout")
-        Log.d("TRACK_HOLDER", "VIEW_TYPE_PLAYER constant: ${TrackAdapter.VIEW_TYPE_PLAYER}")
-        Log.d("TRACK_HOLDER", "VIEW_TYPE_LIST constant: ${TrackAdapter.VIEW_TYPE_LIST}")
+        Log.d("TRACK_HOLDER", "VIEW_TYPE_PLAYER constant: ${TrackAdapter.Companion.VIEW_TYPE_PLAYER}")
+        Log.d("TRACK_HOLDER", "VIEW_TYPE_LIST constant: ${TrackAdapter.Companion.VIEW_TYPE_LIST}")
     }
 
     fun bind(item: Track) {
